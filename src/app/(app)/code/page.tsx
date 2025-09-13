@@ -4,6 +4,7 @@ import { CodeCard } from "@/components/card-code";
 import { useEffect, useState, useCallback, memo } from "react";
 import PaginationControls from "@/components/pagination-controls";
 import { SkeletonGrid } from "@/components/skeleton-grid";
+import { useContent } from "@/contexts/ContentContext";
 
 
 // Memoized content display component
@@ -46,11 +47,15 @@ const ContentDisplay = memo(({ allContent, isLoading, limit }: { allContent: any
 ContentDisplay.displayName = "ContentDisplay";
 
 export default function Home() {
-  const [allContent, setAllContent] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(6);
-  const [total, setTotal] = useState(0);
+  const { 
+    permanentContent, 
+    permanentTotal, 
+    setPermanentContent, 
+    setPermanentTotal 
+  } = useContent();
     
   const API_URL = `/api/sharecontent/getcontent?temp=false&page=${page}&limit=${limit}`;
 
@@ -65,8 +70,8 @@ export default function Home() {
       const response = await result.json();
 
       if (response) {
-        setAllContent(response.data);
-        setTotal(response.total);
+        setPermanentContent(response.data);
+        setPermanentTotal(response.total);
         console.log("Content successfully fetched!", response);
       } else {
         console.error("Unexpected response status:", response.status);
@@ -77,11 +82,11 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  }, [API_URL]);
+  }, [API_URL, setPermanentContent, setPermanentTotal]);
 
   useEffect(() => {
     handleGetContent();
-  }, [page]);
+  }, [handleGetContent]);
 
   return (
     <>
@@ -89,8 +94,8 @@ export default function Home() {
       {/* Enhanced Main Content */}
       <div className="">
         <div className="py-8 px-4 sm:px-6 lg:px-8">
-          <ContentDisplay allContent={allContent} isLoading={isLoading} />
-          <PaginationControls page={page} total={total} limit={limit} setPage={setPage} />
+          <ContentDisplay allContent={permanentContent} isLoading={isLoading} />
+          <PaginationControls page={page} total={permanentTotal} limit={limit} setPage={setPage} />
         </div>
       </div>
     </>

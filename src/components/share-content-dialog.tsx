@@ -13,18 +13,16 @@ import {
 } from "@/components/ui/dialog";
 import { Share2 } from "lucide-react";
 import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { useContent } from "@/contexts/ContentContext";
 
-interface ShareContentDialogProps {
-  onContentCreated: (newContent: any) => void;
-}
-
-export const ShareContentDialog = memo(({ 
-  onContentCreated
-}: ShareContentDialogProps) => {
+export const ShareContentDialog = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTemporary, setIsTemporary] = useState(false);
+  const { toast } = useToast();
+  const { addNewContent } = useContent();
 
   const handleSubmit = useCallback(async () => {
     if (!content.trim() || isSubmitting) return;
@@ -45,19 +43,35 @@ export const ShareContentDialog = memo(({
       if (response.status === 201) {
         console.log("Content created successfully", response);
         
+        // Show success toast
+        toast({
+          title: "Content Shared Successfully!",
+          description: isTemporary 
+            ? "Your temporary content has been shared and will expire in 24 hours." 
+            : "Your content has been shared successfully.",
+          variant: "default",
+        });
+        
         // Clear form and close dialog
         setContent("");
         setIsOpen(false);
         
-        // Notify parent component
-        onContentCreated(response.data.newPost);
+        // Add to global context for real-time updates
+        addNewContent(response.data.newPost);
       }
     } catch (error) {
       console.error("Error creating post:", error);
+      
+      // Show error toast
+      toast({
+        title: "Error Sharing Content",
+        description: "Something went wrong while sharing your content. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
-  }, [content, isTemporary, onContentCreated, isSubmitting]);
+  }, [content, isTemporary, addNewContent, isSubmitting, toast]);
 
   const handleCancel = useCallback(() => {
     setIsOpen(false);
