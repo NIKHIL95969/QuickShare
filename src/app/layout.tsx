@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { LayoutProvider } from "@/hooks/use-layout"
 import { getColors } from "@/lib/colors"
+import AuthSessionProvider from "@/components/providers/session-provider"
 
 // Load DM Sans instead of Inter
 const dmSans = DM_Sans({ subsets: ["latin"]});
@@ -98,9 +99,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LayoutProvider>
-            {children}
-          </LayoutProvider>
+          <AuthSessionProvider>
+            <LayoutProvider>
+              {children}
+            </LayoutProvider>
+          </AuthSessionProvider>
         </ThemeProvider>
       </body>
     </html>
