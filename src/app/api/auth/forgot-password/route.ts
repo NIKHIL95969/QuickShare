@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { connect } from "@/dbConfig/dbConfig"
 import User from "@/models/userModel"
+import { sendPasswordResetEmail } from "@/lib/emailService"
 import crypto from "crypto"
 import { z } from "zod"
 
@@ -38,14 +39,17 @@ export async function POST(request: NextRequest) {
     user.forgotPasswordTokenExpiry = resetTokenExpiry
     await user.save()
 
-    // TODO: Send password reset email here
-    // For now, we'll just return success
-    // In production, you would send an email with the reset link
+    // Send password reset email
+    try {
+      await sendPasswordResetEmail(email, user.username, resetToken)
+    } catch (emailError) {
+      console.error("Failed to send password reset email:", emailError)
+      // Don't fail the request if email fails
+    }
 
     return NextResponse.json(
       { 
-        message: "If an account with that email exists, we've sent a password reset link.",
-        resetToken // Only for development - remove in production
+        message: "If an account with that email exists, we've sent a password reset link."
       },
       { status: 200 }
     )

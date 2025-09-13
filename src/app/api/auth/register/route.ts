@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs"
 import { connect } from "@/dbConfig/dbConfig"
 import User from "@/models/userModel"
 import { z } from "zod"
+import { sendVerificationEmail } from "@/lib/emailService"
+import crypto from "crypto"
 
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -43,18 +45,29 @@ export async function POST(request: NextRequest) {
     const saltRounds = 12
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
+    // Generate verification token
+    const verifyToken = crypto.randomBytes(32).toString("hex")
+    const verifyTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
     // Create user
     const user = new User({
       username,
       email,
       password: hashedPassword,
-      isVerified: false
+      isVerified: false,
+      verifyToken,
+      verifyTokenExpiry
     })
 
     await user.save()
 
-    // TODO: Send verification email here
-    // For now, we'll just return success
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, username, verifyToken)
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError)
+      // Don't fail registration if email fails
+    }
 
     return NextResponse.json(
       { 

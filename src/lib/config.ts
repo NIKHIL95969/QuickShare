@@ -20,6 +20,11 @@ export const siteConfig = {
       icon: "code",
     },
     {
+      href: "/groups",
+      label: "Groups",
+      icon: "users",
+    },
+    {
       href: "/blocks",
       label: "Upload",
       icon: "upload",

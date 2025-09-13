@@ -48,6 +48,29 @@ const contentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
     }],
+    // Group sharing
+    sharedWithGroups: [{
+        groupId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "groups",
+            required: true
+        },
+        sharedAt: {
+            type: Date,
+            default: Date.now
+        },
+        sharedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+            required: true
+        }
+    }],
+    // Sharing type
+    sharingType: {
+        type: String,
+        enum: ["public", "private", "password", "group"],
+        default: "public"
+    },
     // Metadata
     title: {
         type: String

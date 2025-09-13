@@ -40,7 +40,9 @@ export async function POST(request: NextRequest){
             fileType = "text",
             fileName,
             fileSize,
-            allowedUsers = []
+            allowedUsers = [],
+            sharedWithGroups = [],
+            sharingType = "public"
         } = reqBody;
         
         const { searchParams } = new URL(request.url);
@@ -60,6 +62,29 @@ export async function POST(request: NextRequest){
             );
         }
 
+        // Validate group sharing requires authentication
+        if (sharingType === "group" && !userId) {
+            return NextResponse.json(
+                { error: 'Authentication required for group sharing' },
+                { status: 401 }
+            );
+        }
+
+        // Validate group sharing has groups specified
+        if (sharingType === "group" && (!sharedWithGroups || sharedWithGroups.length === 0)) {
+            return NextResponse.json(
+                { error: 'At least one group must be specified for group sharing' },
+                { status: 400 }
+            );
+        }
+
+        // Prepare group sharing data
+        const groupSharingData = sharedWithGroups.map(groupId => ({
+            groupId,
+            sharedBy: userId,
+            sharedAt: new Date()
+        }));
+
         const createContent = new ContentPost({
             content,
             temp,
@@ -71,6 +96,8 @@ export async function POST(request: NextRequest){
             fileName,
             fileSize,
             allowedUsers,
+            sharedWithGroups: groupSharingData,
+            sharingType,
             title,
             description,
             tags: tags || []
