@@ -33,13 +33,6 @@ export function SiteHeader() {
     }
   }
 
-  // Handle content creation
-  const handleContentCreated = (newContent: any) => {
-    // For now, just refresh the page if we're on a content page
-    if (pathname === '/code' || pathname === '/temp') {
-      window.location.reload()
-    }
-  }
 
   return (
     <header className="bg-background sticky top-0 z-50 w-full py-4">
@@ -77,7 +70,7 @@ export function SiteHeader() {
             </div>
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
-              <ShareContentDialog onContentCreated={handleContentCreated} />
+              <ShareContentDialog />
               <Button 
                 onClick={handleRefresh} 
                 variant="outline"
