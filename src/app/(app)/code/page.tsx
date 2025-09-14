@@ -57,7 +57,7 @@ export default function Home() {
     setPermanentTotal 
   } = useContent();
     
-  const API_URL = `/api/sharecontent/getcontent?temp=false&page=${page}&limit=${limit}`;
+  const API_URL = `/api/v1/getcontent?temp=false&page=${page}&limit=${limit}`;
 
   const handleGetContent = useCallback(async () => {
     try {

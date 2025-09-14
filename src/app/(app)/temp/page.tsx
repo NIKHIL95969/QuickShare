@@ -56,7 +56,7 @@ export default function TempPage() {
     setTemporaryTotal 
   } = useContent();
   
-  const API_URL = `/api/sharecontent/getcontent?temp=true&page=${page}&limit=${limit}`;
+  const API_URL = `/api/v1/getcontent?temp=true&page=${page}&limit=${limit}`;
 
   const handleGetContent = useCallback(async () => {
     try {
