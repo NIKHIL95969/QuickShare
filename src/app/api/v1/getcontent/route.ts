@@ -32,21 +32,17 @@ export async function POST(request: NextRequest){
             const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
             filter.createdAt = { $gte: yesterday };
             filter.temp = true;
-        } else if(temp === "false") {
-            filter.temp = false;
-        }
+        } 
 
-        // const ipAddress = request.headers.get('x-forwarded-for') || "";
-        // console.log("ip address is", ipAddress)
-
-        
+        const ipAddress = request.headers.get('x-forwarded-for') || "";
 
         // Try cache first
-        // const cached = await getListCache(temp, page, limit);
-        // if (cached) {
-        //     const { data, total } = JSON.parse(cached);
-        //     return NextResponse.json({message: 'Data fetched successfully (cache)', data, total}, {status: 200});
-        // }
+        const cached = await getListCache(temp, page, limit);
+        if (cached) {
+            const { data, total } = JSON.parse(cached);
+            console.log(data)
+            return NextResponse.json({message: 'Data fetched successfully (cache)', data, total}, {status: 200});
+        }
         // Fallback to DB
         const data = await ContentPost.find(filter, null, { sort: { createdAt: -1 } }).skip(skip).limit(limit);
         const total = await ContentPost.countDocuments(filter);

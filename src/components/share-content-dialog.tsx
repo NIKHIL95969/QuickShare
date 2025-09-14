@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,14 +15,32 @@ import { Share2 } from "lucide-react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { useContent } from "@/contexts/ContentContext";
+import { useAmp } from "next/amp";
+import { isAuthenticatedClient } from "@/lib/auth";
 
 export const ShareContentDialog = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isTemporary, setIsTemporary] = useState(false);
+  const [isTemporary, setIsTemporary] = useState(true);
   const { toast } = useToast();
   const { addNewContent } = useContent();
+
+  const setTemporaryCheck=(e:any)=>{
+    e.preventDefault()
+    const isLoggedIn = isAuthenticatedClient()
+    if(!isLoggedIn && isTemporary){
+      toast({
+        title: "Invalid Operation!",
+        description: "You need to login to share permanent content",
+        variant: "destructive",
+      });
+    }
+    else{
+      setIsTemporary(e.target.checked)
+    }
+  }
+  
 
   const handleSubmit = useCallback(async () => {
     if (!content.trim() || isSubmitting) return;
@@ -31,7 +49,7 @@ export const ShareContentDialog = memo(() => {
       setIsSubmitting(true);
       
       const response = await axios.post(
-        isTemporary ? "/api/sharecontent/createcontent?temp=true" : "/api/sharecontent/createcontent",
+        isTemporary ? "/api/v1/createcontent?temp=true" : "/api/v1/createcontent",
         { content },
         {
           headers: {
@@ -111,7 +129,7 @@ export const ShareContentDialog = memo(() => {
               <Input
                 id="temp-checkbox-dialog"
                 checked={isTemporary}
-                onChange={(e) => setIsTemporary(e.target.checked)}
+                onChange={(e)=>setTemporaryCheck(e)}
                 type="checkbox"
                 name="temp"
                 className="w-4 h-4 accent-primary cursor-pointer"
