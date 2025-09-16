@@ -40,7 +40,7 @@ export function SiteHeader() {
 
 
   useEffect(() => {
-    if (pathname === '/temp') {
+    if (pathname === '/temp' || pathname ==='/code') {
       setTempEnable(true)
     }
     else{
@@ -65,9 +65,15 @@ export function SiteHeader() {
             className="flex lg:hidden"
           /> */}
           <Link href="/" className="flex items-center space-x-4 text-2xl font-bold">
-            <Icons.logo className="size-5" />
-            <span className="sr-only">{siteConfig.name}</span>
-            {siteConfig.name}
+            {/* <Icons.logo className="size-5" /> */}
+            <span className="inline-block text-transparent bg-clip-text animate-gradient-flow"  
+              style={{
+                background: 'linear-gradient(90deg, hsl(var(--primary)), #3b82f6, #8b5cf6, #06b6d4, hsl(var(--primary)))',
+                backgroundSize: '200% 100%',
+                animation: 'gradient-flow 3s ease-in-out infinite',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>{siteConfig.name}</span>
           </Link>
           {/* <Button
             asChild
@@ -96,17 +102,17 @@ export function SiteHeader() {
             {tempEnable && (
             <ShareContentDialog />
             )}
-           {login && (
+           {/* {tempEnable && (
               <Button
                 onClick={handleRefresh}
                 variant="outline"
                 size="sm"
-                className="px-3 py-2 hover:bg-muted/50 transition-all duration-200"
+                className="px-3 py-4 hover:bg-muted/50 transition-all duration-200 flex items-center justify-center"
               >
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh
+                <RefreshCw className="h-4 w-4 sm:mr-2" />
+                <span className="sm:flex hidden"> Refresh</span>
               </Button>
-            )}
+            )} */}
             {!tempEnable && (
               <Button
                 onClick={() => router.push('/temp')}

@@ -20,7 +20,7 @@ export const siteConfig = {
       icon: "code",
     },
     {
-      href: "/blocks",
+      href: "#",
       label: "Upload",
       icon: "upload",
     },

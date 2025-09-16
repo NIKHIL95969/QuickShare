@@ -6,7 +6,6 @@ const WINDOW_SEC = 60; // 1 minute
 export async function rateLimit(ip: string): Promise<{ allowed: boolean; retryAfter?: number }> {
   const redis = await getRedisClient();
   const key = `${process.env.ENV}:rate-limit:${ip}`;
-  console.log("ip", ip);
   const current = await redis.incr(key);
 
   if (current === 1) {

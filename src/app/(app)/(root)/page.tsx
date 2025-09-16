@@ -112,8 +112,8 @@ export default function IndexPage() {
         <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-500">
           <PageActions>
             <Button asChild size="lg" className="hover:scale-105 transition-all duration-200 group">
-              <Link href="/code">
-                Get Started
+              <Link href="/register">
+                Sign up Now
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>

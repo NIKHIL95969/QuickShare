@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/page-header"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
+import { setLocalStorage } from "@/lib/auth"
 
 const AUTH_API = process.env.AUTH_API
 
@@ -45,14 +46,15 @@ export default function LoginPage() {
       const response = await axios.post(`/api/v1/auth/login`, {
         email: formData.email,
         password: formData.password,
-      })
-      
+      })      
       // Show success toast with backend message
+      
       toast({
         title: "Login Successful",
         description: response.data.data.message || "Welcome back!",
         variant: "default",
       })
+      setLocalStorage(response.data.data.data.token)
       
       // Redirect to home page or dashboard
       router.push("/")
@@ -213,7 +215,7 @@ export default function LoginPage() {
               </div> */}
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/register" className="text-primary hover:underline">
                   Sign up
                 </Link>

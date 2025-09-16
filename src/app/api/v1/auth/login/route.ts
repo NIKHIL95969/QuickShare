@@ -65,15 +65,15 @@ export async function POST(request: NextRequest) {
             { status: 200 }
         );
 
-        if (authData.data.token) {
-            response.cookies.set('auth_token', authData.data.token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'lax',
-                maxAge: 60 * 60 * 24 * 30, // 7 days
-                path: '/',
-            });
-        }
+        // if (authData.data.token) {
+        //     response.cookies.set('auth_token', authData.data.token, {
+        //         httpOnly: true,
+        //         secure: true,
+        //         sameSite: 'lax',
+        //         maxAge: 60 * 60 * 24 * 30, // 7 days
+        //         path: '/',
+        //     });
+        // }
 
         return response;
 

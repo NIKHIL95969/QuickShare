@@ -88,7 +88,6 @@ export default function RegisterPage() {
       })
 
       // Show success toast with backend message
-      console.log(response)
       toast({
         title: "Registration Successful",
         description: response.data.data.message || "Account created successfully!",
@@ -114,7 +113,7 @@ export default function RegisterPage() {
       <PageHeader>
         <PageHeaderHeading className="max-w-2xl">Create your account</PageHeaderHeading>
         <PageHeaderDescription>
-          Join QuikShare to start sharing content instantly across all your devices. It's free and takes just a minute.
+          Join QuikShare to start sharing content instantly across all your devices. It&apos;s free and takes just a minute.
         </PageHeaderDescription>
       </PageHeader>
       

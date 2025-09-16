@@ -71,7 +71,6 @@ export default function TempPage() {
       if (response) {
         setTemporaryContent(response.data);
         setTemporaryTotal(response.total);
-        console.log("Temporary content successfully fetched!", response);
       } else {
         console.error("Unexpected response status:", response.status);
       }

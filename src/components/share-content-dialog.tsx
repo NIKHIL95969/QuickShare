@@ -26,19 +26,29 @@ export const ShareContentDialog = memo(() => {
   const { toast } = useToast();
   const { addNewContent } = useContent();
 
+  // useEffect(()=>{
+  //   const isLoggedIn = isAuthenticatedClient()
+  //   if(!isLoggedIn){
+  //     setIsTemporary(true)
+  //   }
+  //   else{
+  //     setIsTemporary(false)
+  //   }
+
+  // },[])
+
   const setTemporaryCheck=(e:any)=>{
     e.preventDefault()
     const isLoggedIn = isAuthenticatedClient()
-    if(!isLoggedIn && isTemporary){
+    if(isLoggedIn){
+      setIsTemporary(e.target.checked)
+    }
+    else{
       toast({
         title: "Invalid Operation!",
         description: "You need to login to share permanent content",
         variant: "destructive",
-      });
-    }
-    else{
-      setIsTemporary(e.target.checked)
-    }
+    });    }
   }
   
 
@@ -58,9 +68,7 @@ export const ShareContentDialog = memo(() => {
         }
       );
 
-      if (response.status === 201) {
-        console.log("Content created successfully", response);
-        
+      if (response.status === 201) {        
         // Show success toast
         toast({
           title: "Content Shared Successfully!",
@@ -100,8 +108,8 @@ export const ShareContentDialog = memo(() => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary">
-          <Share2 className="mr-2 h-4 w-4" />
-          Share Something
+          <Share2 className="sm:mr-2 h-4 w-4" />
+          <span className="sm:flex hidden">Share Something</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto border-0 shadow-2xl bg-gradient-to-br from-background to-muted/30">
