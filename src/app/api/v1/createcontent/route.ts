@@ -23,7 +23,6 @@ export async function POST(request: NextRequest){
         const reqBody = await request.json();
         const { content} = reqBody;
         
-        console.log(content);
         const { searchParams } = new URL(request.url);
 
         const temp = searchParams.get("temp") === "true";
@@ -36,8 +35,6 @@ export async function POST(request: NextRequest){
         }
 
 
-        console.log("temp", temp)
-
         const createContent = new ContentPost({
             content,
             temp
@@ -48,10 +45,9 @@ export async function POST(request: NextRequest){
             return NextResponse.json({error: 'Unable to create post'}, {status: 400});
         }
         // Invalidate list caches by bumping namespace version
-        await bumpListVersion(temp ? 'true' : null);
+        await bumpListVersion(temp ? true : null);
 
-
-        return NextResponse.json({message: 'Post saved successfully', newPost: savedPost}, {status: 201},);
+        return NextResponse.json({message: 'Post saved successfully', newPost: savedPost}, {status: 201});
 
     } catch (error: any) {
         return NextResponse.json( {error: error.message}, {status: 500});

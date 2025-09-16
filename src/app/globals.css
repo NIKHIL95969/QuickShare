@@ -75,6 +75,7 @@
   }
 }
 
+
 .custom-scrollbar {
   height: fit-content; /* Must have a fixed height to scroll */
   overflow-y: auto; /* Enable vertical scrolling */
