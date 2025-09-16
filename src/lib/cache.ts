@@ -1,13 +1,14 @@
 import { getRedisClient } from './redisClient';
 
 const ONE_DAY_SECONDS = 60 * 60 * 24;
+const env = process.env.ENV
 
-function getNamespace(temp: string | null): string {
+function getNamespace(temp: boolean | null): string {
   return temp ? 'temp' : 'all';
 }
 
 function versionKey(namespace: string): string {
-  return `list:v:${namespace}`;
+  return `${env}:list:v:${namespace}`;
 }
 
 async function getVersion(namespace: string): Promise<string> {
@@ -19,17 +20,17 @@ async function getVersion(namespace: string): Promise<string> {
   return '1';
 }
 
-export async function bumpListVersion(temp: string | null): Promise<void> {
+export async function bumpListVersion(temp: boolean | null): Promise<void> {
   const redis = await getRedisClient();
   const ns = getNamespace(temp);
   await redis.incr(versionKey(ns));
 }
 
 function pageKeyBase(ns: string, page: number, limit: number): string {
-  return `list:${ns}:p:${page}:l:${limit}`;
+  return `${env}:list:${ns}:p:${page}:l:${limit}`;
 }
 
-export async function getListCache(temp: string | null, page: number, limit: number): Promise<string | null> {
+export async function getListCache(temp: boolean | null, page: number, limit: number): Promise<string | null> {
   const redis = await getRedisClient();
   const ns = getNamespace(temp);
   const v = await getVersion(ns);
@@ -37,7 +38,7 @@ export async function getListCache(temp: string | null, page: number, limit: num
   return await redis.get(key);
 }
 
-export async function setListCache(temp: string | null, page: number, limit: number, payload: unknown): Promise<void> {
+export async function setListCache(temp: boolean | null, page: number, limit: number, payload: unknown): Promise<void> {
   const redis = await getRedisClient();
   const ns = getNamespace(temp);
   const v = await getVersion(ns);

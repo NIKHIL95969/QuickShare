@@ -22,26 +22,24 @@ export async function POST(request: NextRequest){
             );
         }
         const { searchParams } = new URL(request.url);
-        const temp = searchParams.get("temp");
+        const temp = searchParams.get("temp") == "true"? true : false;
         const page = parseInt(searchParams.get("page") || "1");
         const limit = parseInt(searchParams.get("limit") || "10");
         const skip = (page - 1) * limit;
         let filter: any = {};
-        if(temp === "true"){
+        if(temp){
             const now = new Date();
             const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
             filter.createdAt = { $gte: yesterday };
             filter.temp = true;
         } 
 
-        const ipAddress = request.headers.get('x-forwarded-for') || "";
 
         // Try cache first
         const cached = await getListCache(temp, page, limit);
         if (cached) {
             const { data, total } = JSON.parse(cached);
-            console.log(data)
-            return NextResponse.json({message: 'Data fetched successfully (cache)', data, total}, {status: 200});
+            return NextResponse.json({message: 'Data fetched successfully', data, total}, {status: 200});
         }
         // Fallback to DB
         const data = await ContentPost.find(filter, null, { sort: { createdAt: -1 } }).skip(skip).limit(limit);

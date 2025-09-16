@@ -72,7 +72,6 @@ export default function Home() {
       if (response) {
         setPermanentContent(response.data);
         setPermanentTotal(response.total);
-        console.log("Content successfully fetched!", response);
       } else {
         console.error("Unexpected response status:", response.status);
       }

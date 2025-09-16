@@ -1,14 +1,12 @@
-
+"use client"
 
 // Client-side function (for client components)
 export function isAuthenticatedClient(): boolean {
-  if (typeof document === 'undefined') return false;
-  
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; auth_token=`);
-  if (parts.length === 2) {
-    const token = parts.pop()?.split(';').shift();
-    return !!token && token.length > 20;
-  }
+  const token = localStorage.getItem("auth_token")
+  if(token) return true
   return false;
+}
+
+export function setLocalStorage(token: string){
+    localStorage.setItem("auth_token", token)
 }
