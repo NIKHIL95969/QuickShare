@@ -17,20 +17,26 @@ export const metadata: Metadata = {
   authors: [{ name: "QuickShare Team" }],
 };
 
-// Generate CSS variables for colors
+// Generate CSS variables for colors - memoized to avoid recalculation
+let cachedColorVariables: string | null = null;
 function generateColorVariables() {
+  if (cachedColorVariables) return cachedColorVariables;
+  
   const colors = getColors();
-  const cssVariables = colors.flatMap(palette => 
+  cachedColorVariables = colors.flatMap(palette => 
     palette.colors.map(color => 
       `--color-${color.name}-${color.scale}: ${color.hex};`
     )
   ).join('\n');
 
-  return cssVariables;
+  return cachedColorVariables;
 }
 
-// Generate text selection styles for each color
+// Generate text selection styles for each color - memoized to avoid recalculation
+let cachedSelectionStyles: string | null = null;
 function generateSelectionStyles() {
+  if (cachedSelectionStyles) return cachedSelectionStyles;
+  
   const colors = getColors();
   const selectionStyles = colors.flatMap(palette => 
     palette.colors.map(color => `
@@ -56,7 +62,7 @@ function generateSelectionStyles() {
     `)
   ).join('\n');
 
-  return `
+  cachedSelectionStyles = `
     /* Base selection styles */
     ::selection {
       background-color: hsl(var(--primary));
@@ -70,16 +76,19 @@ function generateSelectionStyles() {
     
     ${selectionStyles}
   `;
+  
+  return cachedSelectionStyles;
 }
+
+// Pre-compute styles once at module level to avoid recalculation
+const colorVariables = generateColorVariables();
+const selectionStyles = generateSelectionStyles();
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const colorVariables = generateColorVariables();
-  const selectionStyles = generateSelectionStyles();
-
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>

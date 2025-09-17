@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/page-header"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
-import { setLocalStorage } from "@/lib/auth"
+import { loginClient } from "@/lib/auth"
 
 const AUTH_API = process.env.AUTH_API
 
@@ -54,7 +54,7 @@ export default function LoginPage() {
         description: response.data.data.message || "Welcome back!",
         variant: "default",
       })
-      setLocalStorage(response.data.data.data.token)
+      loginClient(response.data.data.data.token, response.data.data.data.email)
       
       // Redirect to home page or dashboard
       router.push("/")

@@ -37,18 +37,26 @@ export const ShareContentDialog = memo(() => {
 
   // },[])
 
-  const setTemporaryCheck=(e:any)=>{
-    e.preventDefault()
+  // useEffect(()=>{
+  //   const isLoggedIn = isAuthenticatedClient()
+  //   if(!isLoggedIn){
+  //     setIsTemporary(true)
+  //   }
+  //   else{
+  //     setIsTemporary(false)
+  //   }
+
+  // },[])
+
+  const setTemporaryCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isLoggedIn = isAuthenticatedClient()
-    if(isLoggedIn){
-      setIsTemporary(e.target.checked)
-    }
-    else{
+    if(!isLoggedIn && isTemporary){
       toast({
         title: "Invalid Operation!",
         description: "You need to login to share permanent content",
         variant: "destructive",
-    });    }
+      });
+    }
   }
   
 
