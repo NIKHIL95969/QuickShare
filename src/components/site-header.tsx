@@ -40,6 +40,14 @@ export function SiteHeader() {
 
 
   useEffect(() => {
+    // Prefetch heavy routes so navigation feels instant
+    try {
+      router.prefetch('/temp')
+    } catch (_) {}
+    // Optionally: router.prefetch('/code')
+  }, [])
+
+  useEffect(() => {
     if (pathname === '/temp' || pathname ==='/code') {
       setTempEnable(true)
     }
@@ -52,6 +60,13 @@ export function SiteHeader() {
     const isLogin = isAuthenticatedClient()
     setLogin(isLogin)
   },[])
+
+  // React immediately to login/logout without manual refresh
+  useEffect(() => {
+    const handler = () => setLogin(isAuthenticatedClient())
+    window.addEventListener('auth-changed', handler)
+    return () => window.removeEventListener('auth-changed', handler)
+  }, [])
 
 
 
@@ -114,8 +129,9 @@ export function SiteHeader() {
               </Button>
             )} */}
             {!tempEnable && (
+              <Link href="/temp" prefetch>
               <Button
-                onClick={() => router.push('/temp')}
+                // onClick={() => router.push('/temp')}
                 variant="outline"
                 size="sm"
                 className="px-3 py-2 transition-all duration-200"
@@ -123,6 +139,7 @@ export function SiteHeader() {
                 <Clock className="mr-2 h-4 w-4" />
                 View Temporary
               </Button>
+              </Link>
                  )}
             </div>
             <Separator

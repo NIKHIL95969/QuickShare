@@ -18,10 +18,18 @@ export function MainNav({
   return (
     <nav className={cn("flex items-center gap-1", className)} {...props}>
       {items.map((item) => (
-        <Button key={item.href} variant="ghost" asChild size="sm">
+        <Button 
+          key={item.href} 
+          variant={pathname === item.href ? "default" : "ghost"} 
+          asChild 
+          size="sm"
+        >
           <Link
             href={item.href}
-            className={cn(pathname === item.href && "text-primary")}
+            className={cn(
+              "transition-colors",
+              pathname === item.href && "text-primary-foreground"
+            )}
           >
             <span className="text-lg font-semibold">{item.label}</span>
           </Link>
