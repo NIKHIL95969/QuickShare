@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { siteConfig } from "@/lib/config"
 import { cn } from "@/lib/utils"
-import { Home, Code, Plus } from "lucide-react"
+import { Home, Code, Plus, User } from "lucide-react"
 import { useEffect, useState } from "react"
 import { isAuthenticatedClient } from "@/lib/auth"
 
@@ -12,6 +12,7 @@ const icons = {
   home: Home,
   code: Code,
   upload: Plus,
+  profile: User,
 }
 
 
@@ -25,6 +26,13 @@ export function SiteFooter() {
   useEffect(() => {
     const isLoggedIn = isAuthenticatedClient()
     setLogin(isLoggedIn)
+  }, [])
+
+  // React to auth changes without refresh
+  useEffect(() => {
+    const handler = () => setLogin(isAuthenticatedClient())
+    window.addEventListener('auth-changed', handler)
+    return () => window.removeEventListener('auth-changed', handler)
   }, [])
 
 
@@ -55,12 +63,13 @@ export function SiteFooter() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center text-xs",
-                  isActive ? "text-primary" : "text-muted-foreground"
+                  "flex flex-col items-center text-xs p-2 rounded-lg transition-colors",
+                  isActive 
+                    ? "text-primary bg-primary/10" 
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {Icon && <Icon className="h-5 w-5" />}
-                {/* Uncomment if you also want labels */}
                 <span>{item.label}</span>
               </Link>
             )

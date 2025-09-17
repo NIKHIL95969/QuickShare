@@ -24,5 +24,10 @@ export const siteConfig = {
       label: "Upload",
       icon: "upload",
     },
+    {
+      href: "/profile",
+      label: "Profile",
+      icon: "profile",
+    },
   ],
 }
