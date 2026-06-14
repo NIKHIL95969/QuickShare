@@ -1,6 +1,6 @@
-# 🚀 QuickShare - Seamless Content Sharing
+# 🚀 ShareXYLab - Seamless Content Sharing
 
-QuickShare is a web platform designed to solve the simple problem of sharing text, code snippets, and files between your devices without the hassle of logging into messaging apps. Share content publicly with a short, memorable code, or create an account to keep a permanent history of your shared items.
+ShareXYLab is a web platform designed to solve the simple problem of sharing text, code snippets, and files between your devices without the hassle of logging into messaging apps. Share content publicly with a short, memorable code, or create an account to keep a permanent history of your shared items.
 
 <img width="1900" height="922" alt="image" src="https://github.com/user-attachments/assets/58374a3b-0380-46ec-a088-857c156308ee" />
 
@@ -8,7 +8,7 @@ QuickShare is a web platform designed to solve the simple problem of sharing tex
 
 ## 🎯 About The Project
 
-Ever found yourself working on one computer and needing to send a quick link or code block to your phone or another device? The usual solution involves emailing yourself or logging into a messaging app. QuickShare simplifies this into a two-step process: paste your content to get a unique code, and use that code to retrieve it on any other device instantly.
+Ever found yourself working on one computer and needing to send a quick link or code block to your phone or another device? The usual solution involves emailing yourself or logging into a messaging app. ShareXYLab simplifies this into a two-step process: paste your content to get a unique code, and use that code to retrieve it on any other device instantly.
 
 ---
 
@@ -34,7 +34,7 @@ Ever found yourself working on one computer and needing to send a quick link or 
 This project is set up for continuous integration and deployment on Google Cloud Platform.
 *   **Deployment**: Automatically deployed to **Cloud Run**.
 *   **CI/CD**: Managed via **Cloud Build** triggers on every push to the main branch.
-*   **Domain**: Accessible at [share.taskynow.in](https://share.taskynow.in).
+*   **Domain**: Accessible at [share.xylab.in](https://share.xylab.in).
 
 ---
 

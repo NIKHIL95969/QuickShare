@@ -2,7 +2,6 @@ import {connect} from '@/dbConfig/dbConfig';
 import ContentPost from '@/models/contentModel';
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit } from '@/lib/rateLimitRedis';
-import { getListCache, setListCache } from '@/lib/cache';
 
 
 connect();
@@ -22,33 +21,46 @@ export async function POST(request: NextRequest){
             );
         }
         const { searchParams } = new URL(request.url);
-        const temp = searchParams.get("temp") == "true"? true : false;
         const page = parseInt(searchParams.get("page") || "1");
         const limit = parseInt(searchParams.get("limit") || "10");
+        const search = searchParams.get("search") || "";
+        const id = searchParams.get("id") || "";
+        
         const skip = (page - 1) * limit;
-        let filter: any = {};
-        if(temp){
-            const now = new Date();
-            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-            filter.createdAt = { $gte: yesterday };
-            filter.temp = true;
-        } 
-
-
-        // Try cache first
-        const cached = await getListCache(temp, page, limit);
-        if (cached) {
-            const { data, total } = JSON.parse(cached);
-            return NextResponse.json({message: 'Data fetched successfully', data, total}, {status: 200});
+        let filter: any = {
+            temp: true,
+            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+        };
+        
+        if (id) {
+            filter._id = id;
+        } else if (search) {
+            filter.content = { $regex: search, $options: 'i' };
+            filter.$or = [
+                { password: { $exists: false } },
+                { password: "" },
+                { password: null }
+            ];
         }
-        // Fallback to DB
+
         const data = await ContentPost.find(filter, null, { sort: { createdAt: -1 } }).skip(skip).limit(limit);
         const total = await ContentPost.countDocuments(filter);
-        // Set cache for 24h
-        await setListCache(temp, page, limit, { data, total });
 
-        return NextResponse.json({message: 'Data fetched successfully', data, total}, {status: 200},);
+        const maskedData = data.map((item: any) => {
+            const hasPassword = !!item.password;
+            return {
+                _id: item._id,
+                temp: item.temp,
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt,
+                isProtected: hasPassword,
+                content: hasPassword ? "" : item.content
+            };
+        });
+
+        return NextResponse.json({message: 'Data fetched successfully', data: maskedData, total}, {status: 200});
     } catch (error: any) {
         return NextResponse.json( {error: error.message}, {status: 500});
     }
 }
+

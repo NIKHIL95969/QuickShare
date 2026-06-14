@@ -72,56 +72,32 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   }
 }
 
 
-.custom-scrollbar {
-  height: fit-content; /* Must have a fixed height to scroll */
-  overflow-y: auto; /* Enable vertical scrolling */
-  background-color: #f1f1f1;
+/* Global custom scrollbar style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-/* For WebKit browsers (Chrome, Safari, Edge) */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 3px; /* <<< Makes the scrollbar thinner */
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Color of the tracking area */
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.25);
+  border-radius: 9999px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #888; /* Color of the scroll thumb */
-  border-radius: 4px; /* Round the corners of the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.45);
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color of the thumb on hover */
-}
-
-/* For Firefox */
-.custom-scrollbar {
-  scrollbar-width: thin; /* <<< "thin", "auto", or "none" */
-  scrollbar-color: #888 #f1f1f1; /* thumb-color track-color */
-}
-
-.dark .custom-scrollbar {
-  background-color: #2d2d2d;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-track {
-  background: #2d2d2d;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #555;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #777;
-}
-
-.dark .custom-scrollbar {
-  scrollbar-color: #555 #2d2d2d;
+/* Firefox compatibility */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.25) transparent;
 }

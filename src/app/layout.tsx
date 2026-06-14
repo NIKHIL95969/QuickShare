@@ -1,69 +1,23 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google"; // ✅ Import DM Sans
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
-import { LayoutProvider } from "@/hooks/use-layout"
-import { getColors } from "@/lib/colors"
 import { Toaster } from "@/components/ui/toaster"
-import { ContentProvider } from "@/contexts/ContentContext"
-
-// Load DM Sans instead of Inter
-const dmSans = DM_Sans({ subsets: ["latin"]});
 
 export const metadata: Metadata = {
-  title: "QuickShare - Share & Manage Content",
-  description: "A modern platform for sharing and managing content with real-time collaboration and temporary sharing options.",
-  keywords: ["content sharing", "task management", "collaboration", "productivity"],
-  authors: [{ name: "QuickShare Team" }],
+  title: "ShareXYLab - Quick Share & Manage Content",
+  description: "A modern platform for sharing and managing content.",
+  keywords: ["content sharing", "collaboration", "productivity"],
+  authors: [{ name: "ShareXYLab Team" }],
 };
 
-// Generate CSS variables for colors - memoized to avoid recalculation
 let cachedColorVariables: string | null = null;
 function generateColorVariables() {
-  if (cachedColorVariables) return cachedColorVariables;
-  
-  const colors = getColors();
-  cachedColorVariables = colors.flatMap(palette => 
-    palette.colors.map(color => 
-      `--color-${color.name}-${color.scale}: ${color.hex};`
-    )
-  ).join('\n');
-
-  return cachedColorVariables;
+  return "";
 }
 
-// Generate text selection styles for each color - memoized to avoid recalculation
 let cachedSelectionStyles: string | null = null;
 function generateSelectionStyles() {
-  if (cachedSelectionStyles) return cachedSelectionStyles;
-  
-  const colors = getColors();
-  const selectionStyles = colors.flatMap(palette => 
-    palette.colors.map(color => `
-      .text-${color.name}-${color.scale}::selection {
-        background-color: ${color.hex};
-        color: ${color.foreground};
-      }
-      
-      .bg-${color.name}-${color.scale}::selection {
-        background-color: ${color.hex};
-        color: ${color.foreground};
-      }
-      
-      .text-${color.name}-${color.scale} ::selection {
-        background-color: ${color.hex};
-        color: ${color.foreground};
-      }
-      
-      .bg-${color.name}-${color.scale} ::selection {
-        background-color: ${color.hex};
-        color: ${color.foreground};
-      }
-    `)
-  ).join('\n');
-
-  cachedSelectionStyles = `
-    /* Base selection styles */
+  return `
     ::selection {
       background-color: hsl(var(--primary));
       color: hsl(var(--primary-foreground));
@@ -73,14 +27,9 @@ function generateSelectionStyles() {
       background-color: hsl(var(--primary));
       color: hsl(var(--primary-foreground));
     }
-    
-    ${selectionStyles}
   `;
-  
-  return cachedSelectionStyles;
 }
 
-// Pre-compute styles once at module level to avoid recalculation
 const colorVariables = generateColorVariables();
 const selectionStyles = generateSelectionStyles();
 
@@ -102,19 +51,15 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body className={`${dmSans.className} min-h-screen`}> {/* ✅ Use DM Sans */}
+      <body className="min-h-screen">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <ContentProvider>
-            <LayoutProvider>
-              {children}
-            </LayoutProvider>
-            <Toaster />
-          </ContentProvider>
+          {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
