@@ -9,6 +9,10 @@ const contentSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    password: {
+        type: String,
+        required: false
     }
 }, { timestamps: true })
 
